@@ -45,7 +45,7 @@ class VkScanner:
         while flag:
             url = 'https://api.vk.com/method/photos.get'
             params1 = {'owner_id': self.id, 'access_token': self.token, 'v': '5.131', 'album_id': 'profile',
-                       'extended': '1'}  # убрать 'count': '20',
+                       'extended': '1'}
             resp = requests.get(url, params1).json()
             if list(resp.keys())[0] == 'error':
                     self.id = input('Неверный id попробуйте еще раз:')
@@ -60,8 +60,6 @@ class VkScanner:
             for i in sizes['sizes']:
                 tpm_lst.append([self.size_rating(i['type']), i['type'], i['url']])
             tpm_lst.sort()
-            # print(lst[0])# lst[0] нужен только первый
-            # self.pic_list.append({'rating': tpm_lst[0][0],'size':tpm_lst[0][1],'url':tpm_lst[0][2],'likes': likes} )
             self.pic_list.append([tpm_lst[0][0],  tpm_lst[0][1], tpm_lst[0][2], likes])
             self.pic_list.sort()
 
@@ -77,19 +75,16 @@ class VkScanner:
         # фактическое количество ссылок которе должно быть незавичимо от default и вdода пользователя
         dic = {}
         for i in range(default):
-            # self.top_list.append((self.pic_list[i][0], self.pic_list[i][1], self.pic_list[i][2]))
-            # так будет список множеств
             dic = {'size': self.pic_list[i][1], 'url': self.pic_list[i][2], 'likes': self.pic_list[i][3]}
             if self.pic_list[i][2]:  # url не пустой
                 self.top_list_dic.append(dic)
-                # print('print(dic)')
-                # print(dic)
+
         print('Ссылки есть к ' + str(len(self.top_list_dic)))
         return True
 
     def download_pic(self, variant):
         for dic in self.top_list_dic:
-            today = str(date.today())  # условие если лайки одинаковые
+            today = str(date.today())
             resp = requests.get(dic['url'])
             size = str(dic['size'])
             likes = str(dic['likes'])
